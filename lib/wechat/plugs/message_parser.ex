@@ -9,6 +9,8 @@ defmodule Wechat.Plugs.MessageParser do
 
   alias Wechat.Utils.{MessageEncryptor, SignatureVerifier, XMLParser}
 
+  require Logger
+
   def init(opts) do
     module = Keyword.fetch!(opts, :module)
     config = apply(module, :config, [])
@@ -45,7 +47,9 @@ defmodule Wechat.Plugs.MessageParser do
       %{conn | body_params: msg}
     end
   rescue
-    _ ->
+    e ->
+      Logger.error "decode error: #{inspect(e)}, config: #{inspect(config)}"
+
       conn
       |> send_resp(400, "Bad Request")
       |> halt()
