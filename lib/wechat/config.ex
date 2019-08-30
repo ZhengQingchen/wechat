@@ -12,7 +12,7 @@ defmodule Wechat.Config do
   end
 
   def adapter do
-    elem(adapter_opts(), 0)
+    Application.get_env(:wechat, :adapter) || elem(adapter_opts(), 0)
   end
 
   def httpoison_opts do
